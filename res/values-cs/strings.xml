@@ -26,7 +26,7 @@
     <string name="provider_no_support">Poskytovatel není podporovaný.</string>
     <string name="version">Verze</string>
     <string name="about">O programu</string>
-    <string name="disabled">vypnuté</string>
+    <string name="disabled">Vypnuté</string>
     <string name="bearing">Azimut</string>
     <string name="settings">Nastavení</string>
     <string name="pref_header_loc_update">Aktualizace polohy</string>
@@ -50,11 +50,9 @@ Kopii Obecné veřejné licence GNU jste měli obdržet spolu s tímto programem
     <string name="location_updated">Umístění obnoveno</string>
     <string name="location_stored">Umístění uloženo</string>
     <string name="dialog_store_location">Chcete uložit současné umístění?</string>
-
-<string name="notice_no_dest">Uložte si svoji pozici pro nastavení cíle</string>
+    <string name="notice_no_dest">Uložte si svoji pozici pro nastavení cíle</string>
     <string name="menu_details">Podrobnosti polohy</string>
     <string name="activity_details">Podrobnosti</string>
-    <string name="current">Současná</string>
     <string name="current_speed">Současná rychlost</string>
     <string name="current_bearing">Současný azimut</string>
     <string name="store_location_disabled">Nelze uložit umístění pokud není současné umístění známo</string>
@@ -66,4 +64,12 @@ Kopii Obecné veřejné licence GNU jste měli obdržet spolu s tímto programem
     <string name="direction_relative">relativně k současnému směru</string>
     <string name="inaccurate">nepřesné</string>
     <string name="inaccurate_location">Vaše současné umístění není přesné</string>
+    <string name="build">Používá:</string>
+    <string name="notice_destination_reached">Jste u vašeho cíle</string>
+    <string name="northeast_unit">SV</string>
+    <string name="southeast_unit">JV</string>
+    <string name="southwest_unit">JZ</string>
+    <string name="northwest_unit">SZ</string>
+    <string name="destination_reached">Na cíl</string>
+    <string name="no_destination">Nebyl nastaven cíl</string>
     </resources>

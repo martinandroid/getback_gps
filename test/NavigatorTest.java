@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @package org.ruleant.ariadne
+ * @package com.github.ruleant.getback_gps
  * @author  Dieter Adriaenssens <ruleant@users.sourceforge.net>
  */
 
+import com.github.ruleant.getback_gps.lib.AriadneLocation;
+import com.github.ruleant.getback_gps.lib.FormatUtils;
+import com.github.ruleant.getback_gps.lib.Navigator;
+
 import junit.framework.TestCase;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import org.ruleant.ariadne.lib.AriadneLocation;
-import org.ruleant.ariadne.lib.FormatUtils;
-import org.ruleant.ariadne.lib.Navigator;
 
 /**
  * Unit tests for FormatUtils class.
@@ -185,6 +186,7 @@ public class NavigatorTest extends TestCase {
 
         assertFalse(navigator.isLocationAccurate());
         assertFalse(navigator.isBearingAccurate());
+        assertFalse(navigator.isDestinationReached());
     }
 
     /**
@@ -341,6 +343,42 @@ public class NavigatorTest extends TestCase {
         assertEquals(
                 FormatUtils.normalizeAngle(DIR_LOC1_3 - DIR_LOC2_1),
                 navigator.getRelativeDirection());
+    }
+
+    /**
+     * Tests isDestinationReached.
+     */
+    public final void testIsDestinationReached() {
+        // set location
+        navigator.setLocation(loc1);
+
+        // location is not accurate, check should fail
+        assertFalse(navigator.isDestinationReached());
+
+        // location is accurate, but no destination is set
+        when(loc1.isRecent()).thenReturn(true);
+        when(loc1.getAccuracy()).thenReturn(ACCURACY_OK_40);
+        assertFalse(navigator.isDestinationReached());
+
+        // set destination, same location as location
+        navigator.setDestination(loc1);
+
+        // destination and current location are the same,
+        // check should return true
+        assertEquals((float) 0, navigator.getDistance());
+        assertTrue(navigator.isDestinationReached());
+
+        // set new destination
+        navigator.setDestination(loc2);
+
+        // distance between location and destination is smaller than accuracy,
+        // check should return true
+        assertTrue(navigator.isDestinationReached());
+
+        // distance between location and destination is bigger than accuracy,
+        // check should return false
+        when(loc1.getAccuracy()).thenReturn(ACCURACY_OK_10);
+        assertFalse(navigator.isDestinationReached());
     }
 
     /**

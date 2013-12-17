@@ -16,14 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @package org.ruleant.ariadne
+ * @package com.github.ruleant.getback_gps
  * @author  Dieter Adriaenssens <ruleant@users.sourceforge.net>
  */
 
-import java.util.Locale;
+import com.github.ruleant.getback_gps.lib.FormatUtils;
+
 import junit.framework.TestCase;
 
-import org.ruleant.ariadne.lib.FormatUtils;
+import java.util.Locale;
 
 /**
  * Unit tests for FormatUtils class.
@@ -177,6 +178,16 @@ public class FormatUtilsTest extends TestCase {
     private static final double A_45P678 = 45.678;
 
     /**
+     * 180° angle.
+     */
+    private static final double A_180 = 180.0;
+
+    /**
+     * 225° angle.
+     */
+    private static final double A_225 = 225.0;
+
+    /**
      * -315° angle (= 45°).
      */
     private static final double A_M315 = -315.0;
@@ -215,6 +226,36 @@ public class FormatUtilsTest extends TestCase {
      * 765° angle (= 45°).
      */
     private static final double A_765 = 765.0;
+
+    /**
+     * Precision 0 decimals.
+     */
+    private static final int PRECISION_0 = 0;
+
+    /**
+     * Precision 1 decimal.
+     */
+    private static final int PRECISION_1 = 1;
+
+    /**
+     * Precision 2 decimals.
+     */
+    private static final int PRECISION_2 = 2;
+
+    /**
+     * Precision 3 decimals.
+     */
+    private static final int PRECISION_3 = 3;
+
+    /**
+     * Precision 5 decimals.
+     */
+    private static final int PRECISION_5 = 5;
+
+    /**
+     * Precision 10 decimals.
+     */
+    private static final int PRECISION_10 = 10;
 
     /**
      * Sets up the test fixture.
@@ -369,9 +410,42 @@ public class FormatUtilsTest extends TestCase {
      * Locale en_US is assumed, several angels are passed as an argument.
      */
     public final void testFormatAngle() {
-        assertEquals("45.00°", FormatUtils.formatAngle(A_45));
-        assertEquals("45.67°", FormatUtils.formatAngle(A_45P674));
-        assertEquals("45.68°", FormatUtils.formatAngle(A_45P678));
+        assertEquals("45.00°", FormatUtils.formatAngle(A_45, 2));
+        assertEquals("45.67°", FormatUtils.formatAngle(A_45P674, 2));
+        assertEquals("45.68°", FormatUtils.formatAngle(A_45P678, 2));
+    }
+
+    /**
+     * Tests range of precision parameter of method FormatAngle.
+     */
+    public final void testFormatAngleWrongPrecision() {
+        try {
+            FormatUtils.formatAngle(A_45, -1);
+            fail("should have thrown exception.");
+        } catch (IllegalArgumentException e) {
+            assertEquals(
+                    "Precision can't be a negative value",
+                    e.getMessage());
+        }
+    }
+
+    /**
+     * Tests precision parameter of method FormatAngle.
+     */
+    public final void testFormatAnglePrecision() {
+        assertEquals("45°", FormatUtils.formatAngle(A_45, PRECISION_0));
+        assertEquals("46°", FormatUtils.formatAngle(A_45P674, PRECISION_0));
+        assertEquals("45.7°", FormatUtils.formatAngle(A_45P674, PRECISION_1));
+        assertEquals("45.67°", FormatUtils.formatAngle(A_45P674, PRECISION_2));
+        assertEquals("45.674°",
+                FormatUtils.formatAngle(A_45P674, PRECISION_3));
+        assertEquals("45.678°",
+                FormatUtils.formatAngle(A_45P678, PRECISION_3));
+
+        assertEquals("3.14159°",
+                FormatUtils.formatAngle(Math.PI, PRECISION_5));
+        assertEquals("3.1415926536°",
+                FormatUtils.formatAngle(Math.PI, PRECISION_10));
     }
 
     /**
@@ -382,9 +456,9 @@ public class FormatUtilsTest extends TestCase {
         Locale localeDutchBelgian = new Locale("nl", "BE");
         Locale.setDefault(localeDutchBelgian);
 
-        assertEquals("45,00°", FormatUtils.formatAngle(A_45));
-        assertEquals("45,67°", FormatUtils.formatAngle(A_45P674));
-        assertEquals("45,68°", FormatUtils.formatAngle(A_45P678));
+        assertEquals("45,00°", FormatUtils.formatAngle(A_45, PRECISION_2));
+        assertEquals("45,67°", FormatUtils.formatAngle(A_45P674, PRECISION_2));
+        assertEquals("45,68°", FormatUtils.formatAngle(A_45P678, PRECISION_2));
     }
 
     /**
@@ -392,9 +466,12 @@ public class FormatUtilsTest extends TestCase {
      * even if the angle argument is negative.
      */
     public final void testFormatAngleNeg() {
-        assertEquals("-45.00°", FormatUtils.formatAngle(-1.0 * A_45));
-        assertEquals("-45.67°", FormatUtils.formatAngle(-1.0 * A_45P674));
-        assertEquals("-45.68°", FormatUtils.formatAngle(-1.0 * A_45P678));
+        assertEquals("-45.00°",
+                FormatUtils.formatAngle(-1.0 * A_45, PRECISION_2));
+        assertEquals("-45.67°",
+                FormatUtils.formatAngle(-1.0 * A_45P674, PRECISION_2));
+        assertEquals("-45.68°",
+                FormatUtils.formatAngle(-1.0 * A_45P678, PRECISION_2));
     }
 
     /**
@@ -426,5 +503,15 @@ public class FormatUtilsTest extends TestCase {
         assertEquals(A_0, FormatUtils.normalizeAngle(A_720));
         assertEquals(A_45, FormatUtils.normalizeAngle(A_405));
         assertEquals(A_45, FormatUtils.normalizeAngle(A_765));
+    }
+
+    /**
+     * Tests inverseAngle.
+     */
+    public final void testInverseAngle() {
+        assertEquals(A_180, FormatUtils.inverseAngle(A_0));
+        assertEquals(A_0, FormatUtils.inverseAngle(A_180));
+        assertEquals(A_225, FormatUtils.inverseAngle(A_45));
+        assertEquals(A_45, FormatUtils.inverseAngle(A_225));
     }
 }

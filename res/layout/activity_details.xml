@@ -25,12 +25,10 @@
             android:padding="2dp"
             android:text="@string/curr_location" />
 
-        <TextView
-                android:id="@+id/textView_Current"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="2dp"
-                android:text="@string/current" />
+        <include
+            layout="@layout/section_current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/textView_Destination"
@@ -39,30 +37,13 @@
             android:padding="2dp"
             android:text="@string/destination" />
 
-        <LinearLayout
-            tools:ignore="UseCompoundDrawables"
-            android:layout_width="fill_parent"
+        <TextView
+            android:id="@+id/textView_ToDestination"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/textView_ToDestination"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:padding="2dp"
-                android:text="@string/to_dest" />
-
-            <ImageView
-                android:id="@+id/image_DestinationPointer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:contentDescription="@string/descr_dest_pointer"
-                android:rotation="270"
-                android:src="@android:drawable/ic_menu_send" />
-        </LinearLayout>
+            android:layout_gravity="center_vertical"
+            android:padding="2dp"
+            android:text="@string/to_dest" />
     </LinearLayout>
 
 </ScrollView>
