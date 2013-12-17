@@ -46,6 +46,11 @@ public class DetailsActivity extends AbstractGetBackGpsActivity {
      * Refresh display : refresh the values of Location Provider, Location, ...
      */
     protected final void refreshDisplay() {
+        super.refreshDisplay();
+
+        // refresh views with "current" info
+        refreshCurrentViews(false);
+
         // only refresh items if activity is bound to service
         // connection state is checked in getNavigator
         LocationService service = getService();
@@ -83,36 +88,6 @@ public class DetailsActivity extends AbstractGetBackGpsActivity {
             locationText += currentLocation.toString(this);
         }
         tvLocation.setText(locationText);
-
-        // TODO : reuse same section from main activity
-        // Refresh current
-        TextView tvCurrent
-                = (TextView) findViewById(R.id.textView_Current);
-
-        // current speed
-        String currentText = res.getString(R.string.current_speed) + ": ";
-        if (navigator == null) {
-            currentText += " " + res.getString(R.string.unknown);
-        } else {
-            currentText += FormatUtils.formatSpeed(
-                    navigator.getCurrentSpeed(), this);
-        }
-
-        // current bearing
-        currentText += "\n" + res.getString(R.string.current_bearing) + ": ";
-        if (navigator == null) {
-            currentText += " " + res.getString(R.string.unknown);
-        } else {
-            CardinalDirection cd = new CardinalDirection(
-                    this,
-                    FormatUtils.normalizeAngle(
-                            navigator.getCurrentBearing()));
-
-            currentText += cd.format();
-        }
-
-        // update string
-        tvCurrent.setText(currentText);
 
         // Refresh Destination
         TextView tvDestination
@@ -178,7 +153,5 @@ public class DetailsActivity extends AbstractGetBackGpsActivity {
             }
         }
         tvToDestination.setText(toDestinationText);
-
-        super.refreshDisplay();
     }
 }
