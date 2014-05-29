@@ -209,7 +209,7 @@ public class CircularAverageTest {
         // step to opposite quadrant
         testAverageValueAfterStep(ANGLE_Q3, STEP_170);
         // bigger steps in testAverageValuePositiveStepCrossMax()
-        
+
         // initial value in fourth quadrant
         // step to next quadrant
         testAverageValueAfterStep(ANGLE_Q4, STEP_100);
@@ -270,6 +270,19 @@ public class CircularAverageTest {
         // initial value in second quadrant
         // step to opposite quadrant
         testAverageValueAfterStep(ANGLE_Q2, -1 * STEP_170);
+    }
+
+    /**
+     * Tests apply 180° degree step.
+     */
+    @Test
+    public final void testAverageValue180Step() {
+        // value will move clockwise
+        testAverageValueAfterStep(0, STEP_180);
+        testAverageValueAfterStep(90, STEP_180);
+        // value will move counter-clockwise
+        testAverageValueAfterStep(180, -1 * STEP_180);
+        testAverageValueAfterStep(270, -1 * STEP_180);
     }
 
     /**
