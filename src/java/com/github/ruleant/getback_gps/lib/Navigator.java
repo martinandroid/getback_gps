@@ -28,9 +28,23 @@ package com.github.ruleant.getback_gps.lib;
  */
 public class Navigator {
     /**
+     * Traveldirection enumerator.
+     */
+    public enum TravelDirection {
+        Unknown,
+	Forward,
+	Backwards
+    }
+
+    /**
      * Required location accuracy in meter.
      */
     private static final double ACCURACY_LIMIT = 50;
+
+    /**
+     * Angle range for travel direction detection in degrees.
+     */
+    private static final double DIRECTION_ANGLE_RANGE = 45;
 
     /**
      * Zero distance.
@@ -73,6 +87,11 @@ public class Navigator {
      * used to calibrate current bearing.
      */
     private double mSensorBearingOffset = 0;
+
+    /**
+     * Detected traveldirection.
+     */
+    private TravelDirection mTravelDirection;
 
     /**
      * Constructor.
@@ -197,6 +216,15 @@ public class Navigator {
     }
 
     /**
+     * Current detected travel direction.
+     *
+     * @return travel direction
+     */
+    public final TravelDirection getTravelDirection() {
+        return mTravelDirection;
+    }
+
+    /**
      * Calculate direction to current destination,
      * relative to current bearing.
      *
@@ -257,8 +285,8 @@ public class Navigator {
                         && distance > mPreviousLocation.getAccuracy()) {
                     // calculate speed from distance travelled and time spent
                     // time is in milliseconds, convert to seconds.
-                    currentSpeed = distance /
-                        ((float) time / (float) Tools.SECOND_IN_MILLIS);
+                    currentSpeed = distance
+                        / ((float) time / (float) Tools.SECOND_IN_MILLIS);
                 }
             }
         }
@@ -366,12 +394,25 @@ public class Navigator {
         if (isSensorBearingAccurate()
             && (mCurrentLocation != null && mCurrentLocation.hasBearing()
             || isLocationBearingAccurate())) {
+
+            double bearing = mSensorOrientation.getOrientation();
+
             // Calculate offset
-            mSensorBearingOffset = mSensorOrientation.getOrientation()
-                    - getLocationBearing();
+            mSensorBearingOffset = bearing - getLocationBearing();
+
+            // detect moving backwards
+            double absBearingOffset = Math.abs(mSensorBearingOffset);
+            if (absBearingOffset < (FormatUtils.CIRCLE_HALF + DIRECTION_ANGLE_RANGE)
+		&& absBearingOffset > (FormatUtils.CIRCLE_HALF - DIRECTION_ANGLE_RANGE)) {
+                mSensorBearingOffset -= FormatUtils.CIRCLE_HALF;
+                mTravelDirection = TravelDirection.Backwards;
+            } else {
+                mTravelDirection = TravelDirection.Forward;
+            }
         } else {
             // Reset offset
             mSensorBearingOffset = 0;
+            mTravelDirection = TravelDirection.Unknown;
         }
     }
 }
