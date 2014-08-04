@@ -14,7 +14,7 @@ before_install:
   - cd $HOME
   # install and initialise build-trend scripts
   # - if [[ -d buildtime-trend/.git ]]; then cd buildtime-trend; git pull; cd ..; else git clone https://github.com/ruleant/buildtime-trend.git; fi
-  - curl https://codeload.github.com/ruleant/buildtime-trend/tar.gz/0.1-preview | tar -xz --transform s/buildtime-trend-0\.1-preview/buildtime-trend/g
+  - curl https://codeload.github.com/ruleant/buildtime-trend/tar.gz/v0.1 | tar -xz --transform s/buildtime-trend-v0\.1/buildtime-trend/g
   - source buildtime-trend/init.sh
   - mvn -v
   # install necessary x32-libs for Android SDK, see http://rkistner.github.io/android/2013/02/05/android-builds-on-travis-ci/
