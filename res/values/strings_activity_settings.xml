@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
 
     <!-- Strings related to Settings -->
     <!-- General settings -->
@@ -36,5 +38,13 @@
         <item>10000</item>
         <item>5000</item>
         <item>1000</item>
+    </string-array>
+
+    <!-- string-array name="pref_geo_orientation_sensor_titles"
+    was moved to res/values/strings.xml to be translatable in Weblate -->
+    <string-array name="pref_geo_orientation_sensor_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 </resources>
