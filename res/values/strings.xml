@@ -32,6 +32,7 @@
     <string name="menu_details">Location details</string>
     <string name="activity_details">Details</string>
     <string name="location_provider">Location Provider</string>
+    <string name="name">Name</string>
     <string name="provider">Provider</string>
     <string name="loc_provider_network">network (Cell phone/WiFi)</string>
     <string name="loc_provider_gps">GPS</string>
@@ -69,7 +70,7 @@
     <string name="pref_header_loc_update">Location Updates</string>
     <string name="pref_loc_update_dist">Distance based updates</string>
     <string name="pref_loc_update_time">Time based updates</string>
-    <string name="pref_enable_sensors">Enable sensors (if available)</string>
+    <string name="pref_enable_sensors">Use available sensors</string>
     <string name="pref_geo_orientation_sensor">Default orientation sensor</string>
     <string name="sensors_enabled">Enabled : quicker updated and more accurate bearing</string>
     <string name="sensors_disabled">Disabled : saves power</string>
@@ -86,6 +87,11 @@
         <item quantity="one">%d minute</item>
         <item quantity="other">%d minutes</item>
     </plurals>
+    <string-array name="pref_geo_orientation_sensor_titles">
+        <item>Automatic</item>
+        <item>Raw sensors (experimental)</item>
+        <item>Calculated orientation sensor</item>
+    </string-array>
     <!-- Strings related to About activity -->
     <string name="about">About</string>
     <string name="version">Version</string>
