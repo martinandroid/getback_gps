@@ -126,6 +126,8 @@ public class MainActivity extends AbstractGetBackGpsActivity {
         // Refresh Directions to destination
         NavigationView nvToDestination
                 = (NavigationView) findViewById(R.id.navigationView_ToDest);
+        TextView tvToDestinationName
+                = (TextView) findViewById(R.id.textView_toDestName);
         TextView tvToDestinationDistance
                 = (TextView) findViewById(R.id.textView_toDestDist);
         TextView tvToDestinationDirection
@@ -136,6 +138,7 @@ public class MainActivity extends AbstractGetBackGpsActivity {
         TextView tvToDestinationMessage
                 = (TextView) findViewById(R.id.textView_toDest_Message);
 
+        String toDestinationNameText = res.getString(R.string.notset);
         String toDestinationDistanceText = res.getString(R.string.unknown);
         String toDestinationDirectionText = res.getString(R.string.unknown);
         String toDestinationMessage = res.getString(R.string.unknown);
@@ -151,6 +154,15 @@ public class MainActivity extends AbstractGetBackGpsActivity {
                     = res.getString(R.string.destination_reached);
         } else {
             displayToDest = true;
+
+            // Set destination name
+            toDestinationNameText = navigator.getDestination().getName();
+
+            // if name is not set, use 'location name'
+            if (toDestinationNameText == null
+                    || toDestinationDirectionText.length() == 0) {
+                toDestinationNameText = res.getString(R.string.location_name);
+            }
 
             if (navigator.isLocationAccurate()) {
                 // Set distance to destination
@@ -186,6 +198,7 @@ public class MainActivity extends AbstractGetBackGpsActivity {
             tvToDestinationMessage.setVisibility(LinearLayout.INVISIBLE);
 
             // update views
+            tvToDestinationName.setText(toDestinationNameText);
             tvToDestinationDistance.setText(toDestinationDistanceText);
             tvToDestinationDirection.setText(toDestinationDirectionText);
         } else {
