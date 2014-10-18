@@ -196,6 +196,7 @@ abstract class AbstractGetBackGpsActivity extends Activity {
 
         // Set the layout for the dialog
         builder.setView(dialogView)
+                .setTitle(R.string.store_location)
                 .setPositiveButton(R.string.store_location,
                         new DialogInterface.OnClickListener() {
                             public void onClick(final DialogInterface dialog,
@@ -206,6 +207,76 @@ abstract class AbstractGetBackGpsActivity extends Activity {
                                  // store current location and refresh display
                                 if (mBound) {
                                     mService.storeCurrentLocation(locationName);
+                                }
+                                refreshDisplay();
+                            }
+                        })
+                .setNegativeButton(R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog,
+                                                final int id) {
+                                // User cancelled the dialog
+                            }
+                        });
+
+        // Create the AlertDialog object and display it
+        builder.create().show();
+    }
+
+    /**
+     * Called when the user clicks the Rename Destination menu item.
+     * It displays a dialog, where the user can enter a new name
+     * for the current destination.
+     *
+     * @param item MenuItem object that was clicked
+     */
+    final void renameDestination(final MenuItem item) {
+        if (mBound && mService.getDestination() == null) {
+            Toast.makeText(
+                    this,
+                    R.string.rename_destination_disabled,
+                    Toast.LENGTH_LONG
+            ).show();
+            return;
+        }
+
+        // Use the Builder class for convenient dialog construction,
+        // based on the example on
+        // https://developer.android.com/guide/topics/ui/dialogs.html
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        // Inflate the layout for the dialog
+        // Pass null as the parent view because it's going into the dialog layout
+        final View dialogView
+                = inflater.inflate(R.layout.dialog_location_name, null);
+
+        // Get the TextView object containing the location question
+        final TextView tvLocationMessage
+                = (TextView) dialogView.findViewById(R.id.location_message);
+        // set message for renaming destination
+        tvLocationMessage.setText(R.string.dialog_rename_destination);
+
+        // Get the EditText object containing the location name
+        final EditText etLocationName
+                = (EditText) dialogView.findViewById(R.id.location_name);
+        // set current destination name as default
+        etLocationName.setText(mService.getDestination().getName());
+
+        // Set the layout for the dialog
+        builder.setView(dialogView)
+                .setTitle(R.string.rename_destination)
+                .setPositiveButton(R.string.rename_destination,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog,
+                                                final int id) {
+                                String locationName
+                                        = etLocationName.getText().toString();
+
+                                // store current location and refresh display
+                                if (mBound) {
+                                    mService.renameDestination(locationName);
                                 }
                                 refreshDisplay();
                             }
@@ -269,6 +340,9 @@ abstract class AbstractGetBackGpsActivity extends Activity {
             return true;
         } else if (itemId == R.id.menu_storelocation) {
             storeLocation(item);
+            return true;
+        } else if (itemId == R.id.menu_renamedestination) {
+            renameDestination(item);
             return true;
         } else if (itemId == R.id.menu_refresh) {
             refresh(item);
