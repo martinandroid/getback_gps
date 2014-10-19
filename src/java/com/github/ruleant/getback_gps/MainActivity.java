@@ -22,10 +22,12 @@
 package com.github.ruleant.getback_gps;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,11 +42,33 @@ import com.github.ruleant.getback_gps.lib.Navigator;
  *
  * @author Dieter Adriaenssens <ruleant@users.sourceforge.net>
  */
-public class MainActivity extends AbstractGetBackGpsActivity {
+public class MainActivity extends AbstractGetBackGpsActivity
+        implements View.OnClickListener {
+    /**
+     * Maximum length when displaying destination name (Portrait orientation).
+     */
+    private static final int DESTINATION_NAME_LENGTH_PORTRAIT = 23;
+
+    /**
+     * Maximum length when displaying destination name (Landscape orientation).
+     */
+    private static final int DESTINATION_NAME_LENGTH_LANDSCAPE = 75;
+
+    /**
+     * String to append to shortened string, to indicate it was shortened.
+     */
+    private static final String SHORTENER = "(...)";
+
+
     @Override
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // add onClicklistener to Destination name text view
+        TextView tvDestinationName
+                = (TextView) findViewById(R.id.textView_toDestName);
+        tvDestinationName.setOnClickListener(this);
     }
 
     @Override
@@ -164,6 +188,24 @@ public class MainActivity extends AbstractGetBackGpsActivity {
                 toDestinationNameText = res.getString(R.string.location_name);
             }
 
+            // set maxLength depending on screen orientation
+            int maxLength;
+            if (res.getConfiguration().orientation
+                    == Configuration.ORIENTATION_PORTRAIT) {
+                maxLength = DESTINATION_NAME_LENGTH_PORTRAIT;
+            } else {
+                maxLength = DESTINATION_NAME_LENGTH_LANDSCAPE;
+            }
+
+            // shorten long names
+            if (toDestinationNameText.length() > maxLength) {
+                int lastCharPosition = maxLength - SHORTENER.length();
+                toDestinationNameText
+                        = toDestinationNameText.subSequence(0, lastCharPosition)
+                            .toString().trim()
+                            + SHORTENER;
+            }
+
             if (navigator.isLocationAccurate()) {
                 // Set distance to destination
                 toDestinationDistanceText
@@ -215,5 +257,16 @@ public class MainActivity extends AbstractGetBackGpsActivity {
         nvToDestination.invalidate();
 
         return true;
+    }
+
+    /**
+     * Implement the OnClickListener callback for destination name textView.
+     *
+     * @param view View object that was clicked
+     */
+    public final void onClick(final View view) {
+        if (view.getId() == R.id.textView_toDestName) {
+            renameDestination();
+        }
     }
 }

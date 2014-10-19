@@ -164,10 +164,8 @@ abstract class AbstractGetBackGpsActivity extends Activity {
      * Called when the user clicks the Store Location menu item.
      * It displays a dialog, where the user confirm or cancel storing
      * the current location.
-     *
-     * @param item MenuItem object that was clicked
      */
-    final void storeLocation(final MenuItem item) {
+    final void storeLocation() {
         if (mBound && mService.getLocation() == null) {
             Toast.makeText(
                     this,
@@ -201,14 +199,18 @@ abstract class AbstractGetBackGpsActivity extends Activity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(final DialogInterface dialog,
                                                 final int id) {
-                                String locationName
+                                if (etLocationName != null) {
+                                    String locationName
                                         = etLocationName.getText().toString();
 
-                                 // store current location and refresh display
-                                if (mBound) {
-                                    mService.storeCurrentLocation(locationName);
+                                    // store current location
+                                    // and refresh display
+                                    if (mBound) {
+                                        mService.storeCurrentLocation(
+                                                locationName);
+                                    }
+                                    refreshDisplay();
                                 }
-                                refreshDisplay();
                             }
                         })
                 .setNegativeButton(R.string.cancel,
@@ -227,10 +229,8 @@ abstract class AbstractGetBackGpsActivity extends Activity {
      * Called when the user clicks the Rename Destination menu item.
      * It displays a dialog, where the user can enter a new name
      * for the current destination.
-     *
-     * @param item MenuItem object that was clicked
      */
-    final void renameDestination(final MenuItem item) {
+    final void renameDestination() {
         if (mBound && mService.getDestination() == null) {
             Toast.makeText(
                     this,
@@ -248,21 +248,26 @@ abstract class AbstractGetBackGpsActivity extends Activity {
         LayoutInflater inflater = this.getLayoutInflater();
 
         // Inflate the layout for the dialog
-        // Pass null as the parent view because it's going into the dialog layout
+        // Pass null as the parent view because it's going
+        // into the dialog layout
         final View dialogView
                 = inflater.inflate(R.layout.dialog_location_name, null);
 
         // Get the TextView object containing the location question
         final TextView tvLocationMessage
                 = (TextView) dialogView.findViewById(R.id.location_message);
-        // set message for renaming destination
-        tvLocationMessage.setText(R.string.dialog_rename_destination);
+        if (tvLocationMessage != null) {
+            // set message for renaming destination
+            tvLocationMessage.setText(R.string.dialog_rename_destination);
+        }
 
         // Get the EditText object containing the location name
         final EditText etLocationName
                 = (EditText) dialogView.findViewById(R.id.location_name);
-        // set current destination name as default
-        etLocationName.setText(mService.getDestination().getName());
+        if (etLocationName != null) {
+            // set current destination name as default
+            etLocationName.setText(mService.getDestination().getName());
+        }
 
         // Set the layout for the dialog
         builder.setView(dialogView)
@@ -271,14 +276,18 @@ abstract class AbstractGetBackGpsActivity extends Activity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(final DialogInterface dialog,
                                                 final int id) {
-                                String locationName
+                                if (etLocationName != null) {
+                                    String locationName
                                         = etLocationName.getText().toString();
 
-                                // store current location and refresh display
-                                if (mBound) {
-                                    mService.renameDestination(locationName);
+                                    // store current location
+                                    // and refresh display
+                                    if (mBound) {
+                                        mService.renameDestination(
+                                                locationName);
+                                    }
+                                    refreshDisplay();
                                 }
-                                refreshDisplay();
                             }
                         })
                 .setNegativeButton(R.string.cancel,
@@ -339,10 +348,10 @@ abstract class AbstractGetBackGpsActivity extends Activity {
             displayAbout(item);
             return true;
         } else if (itemId == R.id.menu_storelocation) {
-            storeLocation(item);
+            storeLocation();
             return true;
         } else if (itemId == R.id.menu_renamedestination) {
-            renameDestination(item);
+            renameDestination();
             return true;
         } else if (itemId == R.id.menu_refresh) {
             refresh(item);
@@ -354,10 +363,13 @@ abstract class AbstractGetBackGpsActivity extends Activity {
 
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
-        MenuItem mi = menu.findItem(R.id.menu_storelocation);
-        if (mBound) {
+        MenuItem miStoreLocation = menu.findItem(R.id.menu_storelocation);
+        MenuItem miRenameDest = menu.findItem(R.id.menu_renamedestination);
+        if (isBound()) {
             // enable store location button if a location is set
-            mi.setEnabled(mService.getLocation() != null);
+            miStoreLocation.setEnabled(mService.getLocation() != null);
+            // enable store location button if a location is set
+            miRenameDest.setEnabled(mService.getDestination() != null);
         }
 
         return super.onPrepareOptionsMenu(menu);
